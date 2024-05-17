@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+  .weather-container {
+    margin-top: 50px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container weather-container">
+  <h1 class="text-center mb-4">Weather App</h1>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="input-group mb-3">
+        <input type="text" id="location" class="form-control" placeholder="Enter Location">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="button" onclick="fetchWeather()">Get Weather</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="weather-info" class="text-center"></div>
+</div>
+
+<script>
+function fetchWeather() {
+  const locationInput = document.getElementById("location").value;
+  const apiKey = "9a08fab18e767ba18267a54651bffada"; // Replace with your OpenWeatherMap API key
+  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${locationInput}&appid=${apiKey}&units=metric`;
+
+  fetch(apiUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then(data => {
+      displayWeather(data);
+    })
+    .catch(error => {
+      console.error('There was a problem with the fetch operation:', error);
+    });
+}
+
+function displayWeather(data) {
+  const weatherInfo = document.getElementById("weather-info");
+  weatherInfo.innerHTML = `
+    <h2>${data.name}, ${data.sys.country}</h2>
+    <p>Weather: ${data.weather[0].description}</p>
+    <p>Temperature: ${data.main.temp}°C</p>
+    <p>Humidity: ${data.main.humidity}%</p>
+    <p>Wind Speed: ${data.wind.speed} m/s</p>
+  `;
+}
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
